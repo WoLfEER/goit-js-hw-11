@@ -7,10 +7,6 @@
     border: #24bea5;
 }
 
-.load-more.is-hidden {
-    display: none;
-}
-
 .button.is-hidden {
     display: none;
 }
@@ -21,4 +17,89 @@
 
 button:disabled {
     opacity: 0.3;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
+        Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    background-color: #fafafa;
+    color: #212121;
+    line-height: 1.5;
+    text-align: center;
+}
+
+input {
+    padding: 8px;
+    font: inherit;
+    height: 30px;
+}
+
+.form-btn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 30px;
+    margin-left: 15px;
+}
+
+button {
+    padding: 8px 8px;
+    cursor: pointer;
+}
+
+.search-form {
+    display: flex;
+    justify-content: center;
+    padding: 10px;
+    background-color: #6e17d2;
+}
+
+.gallery {
+    margin: 20px;
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.photo-card {
+    display: block;
+    flex-basis: calc(((100% - ((4 - 1) * 20px))) / 4);
+    text-decoration: none;
+    height: 100%;
+    border: 1px solid #eeeeee;
+}
+
+.photo-card:hover,
+.photo-card:focus {
+    cursor: pointer;
+    box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.12), 0px 4px 4px rgba(0, 0, 0, 0.06),
+        1px 4px 6px rgba(0, 0, 0, 0.16);
+}
+
+.photo-card img {
+    display: block;
+    height: 240px;
+    width: 100%;
+    object-fit: cover;
+}
+
+.info {
+    padding-left: 8px;
+    padding-right: 8px;
+    display: flex;
+    gap: 10px;
+    justify-content: space-around;
+    color: #000000;
+}
+
+.info-item {
+    text-align: center;
 }

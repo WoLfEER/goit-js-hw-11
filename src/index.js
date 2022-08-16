@@ -1,57 +1,67 @@
-import { Notify } from 'notiflix/build/notiflix-notify-aio';
 import SimpleLightbox from 'simplelightbox';
+import { Notify } from 'notiflix/build/notiflix-notify-aio';
 import 'simplelightbox/dist/simple-lightbox.min.css';
-import ImgApiService from './apiFetch/apiFetch';
 import { refs } from './refs/get_refs';
-import { createMarkup, clearMarkup } from './markup/markup';
+import {
+    getImage,
+    resetPageCounter,
+    incrementPageCounter,
+} from './apiFetch/apiFetch';
+import { renderMarkup, createMarkup, clearMarkup } from './markup/markup';
+import { message } from './new message/message-response';
 import LoadMoreBtn from './load-more-btn/load.more.btn';
-import { messageWithResponse } from './new message/message-response';
 
-// lightbox init
-const lightbox = new SimpleLightbox('.gallery a', {
+//Vars
+var lightbox = new SimpleLightbox('.gallery a', {
     captionsData: 'alt',
-    captionDelay: 250,
+    captionDelay: 0.25,
 });
 
-console.log(lightbox);
-
+let searchQuery = '';
 const loadMoreBtn = new LoadMoreBtn({
     selector: '[data-action="load-more"]',
     hidden: true,
 });
-const imgApiService = new ImgApiService();
 
-// listeners
-refs.searchForm.addEventListener('submit', onSearch);
-loadMoreBtn.refs.button.addEventListener('click', fetchAndToggle);
+//Listeners
+refs.searchForm.addEventListener('submit', onSubmitClick);
+refs.loadMoreBtn.addEventListener('click', onLoadMoreBtnClick);
 
-// functions
-function onSearch(e) {
-    e.preventDefault();
+//Functions
+function onSubmitClick(evt) {
+    evt.preventDefault();
+    searchQuery = getValueFromInput(evt);
+    if (!searchQuery) return;
 
-    imgApiService.query = e.target.elements.searchQuery.value;
-
-    if (!imgApiService.query) {
-        return;
-    }
-    //   const searchQuery = e.currentTarget.elements.query.value;
-
-    loadMoreBtn.show();
-    imgApiService.resetPage();
-    clearMarkup();
-    fetchAndToggle();
+    loadMoreBtn.hide();
+    clearMarkup(refs.gallery);
+    resetPageCounter();
+    renderMarkupToDom(searchQuery);
 }
 
-function appendToMarkup(response) {
-    refs.gallery.insertAdjacentHTML('beforeend', createMarkup(response));
+function onLoadMoreBtnClick() {
+    renderMarkupToDom(searchQuery);
 }
 
-function fetchAndToggle() {
-    loadMoreBtn.disabled();
-    imgApiService.getImage().then(hits => appendToMarkup(hits));
-    setTimeout(() => {
+async function renderMarkupToDom(searchQuery) {
+    try {
+        loadMoreBtn.disabled();
+        const response = await getImage(searchQuery);
+
+        message(response);
+        incrementPageCounter();
+        renderMarkup(refs.gallery, createMarkup(response));
+        lightboxRefresh();
         loadMoreBtn.enable();
-    }, 400);
+    } catch (error) {
+        Notify.failure(`Error! ${error.message}`);
+    }
 }
 
-messageWithResponse(response);
+function getValueFromInput(evt) {
+    return evt.currentTarget.elements.searchQuery.value.trim('');
+}
+
+function lightboxRefresh() {
+    lightbox.refresh();
+}

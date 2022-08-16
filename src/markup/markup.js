@@ -1,7 +1,4 @@
-import { refs } from '../refs/get_refs';
-
 export function createMarkup(response) {
-    console.log(response);
     return response.data.hits.map(
         ({
             webformatURL,
@@ -12,7 +9,7 @@ export function createMarkup(response) {
             comments,
             downloads,
         }) => {
-            return `
+            return /*html */ `
         <a class="photo-card" href="${largeImageURL}">
           <img src="${webformatURL}" alt="${tags}" loading="lazy" />
           <div class="info">
@@ -38,6 +35,6 @@ export function renderMarkup(element, markup) {
     element.insertAdjacentHTML('beforeend', markup.join(''));
 }
 
-export function clearMarkup() {
-    refs.gallery.innerHTML = '';
+export function clearMarkup(element) {
+    element.innerHTML = '';
 }
