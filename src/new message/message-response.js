@@ -1,5 +1,5 @@
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
-import { pageCounter } from '../const/const';
+import { pageCounter } from '../apiFetch/apiFetch';
 import { FAILURE_MSG } from '../const/const';
 import LoadMoreBtn from '../load-more-btn/load.more.btn';
 
